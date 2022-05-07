@@ -14,7 +14,8 @@ async def on_message(cur_message):
         counter = 0
         for message in messages:
             counter += message.content.count('\n・')
-            counter += 1 if message.content[0] == "・" else 0
+            if len(message.content) > 0:
+                counter += 1 if message.content[0] == "・" else 0
         await cur_message.channel.send(f'現在のエピソードは{counter}話です。')
 
 

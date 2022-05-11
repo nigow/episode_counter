@@ -10,7 +10,7 @@ SEARCH_LIMIT = 500
 
 @client.event
 async def on_message(cur_message):
-    if cur_message in ["count", "random", "gatcha"]:
+    if cur_message.content in ["count", "random", "gatcha"]:
         episode_channel = client.get_channel(int(os.environ.get('CHANNEL_ID')))
         messages = await episode_channel.history(limit=SEARCH_LIMIT).flatten()
 

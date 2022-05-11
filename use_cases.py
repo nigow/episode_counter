@@ -77,6 +77,7 @@ class UseCase:
                                 reacted_indecies.append(index)
                         # remove the reacted indecies from the message
                         for index in reacted_indecies:
+                            # TODO: fix this: popping multiple elements by addressing the contents instead of index
                             parsed_message.pop(index)
 
                     else:

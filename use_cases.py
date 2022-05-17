@@ -1,8 +1,11 @@
+import csv
+
 from discord import Message
-from typing import List
+from typing import List, Union, Tuple
 import random
-from entity import EpisodeDeck
+from entity import EpisodeDeck, Roulette
 from utility import divide_by_delimiter
+import os
 
 # set up constants
 
@@ -14,6 +17,9 @@ SSR_THRESHOLD = 4
 
 # SR should be more than 1 reaction
 SR_THRESHOLD = 1
+
+# Setting file for roulette config
+ROULETTE_PATH = 'roulette.csv'
 
 
 class UseCase:
@@ -91,3 +97,13 @@ class UseCase:
 
         result = all_episodes.roll_ten_gatchas(username)
         return result
+
+    @staticmethod
+    def roulette() -> Union[Tuple[str, str], None]:
+        setting_exists = os.path.exists(ROULETTE_PATH)
+        if setting_exists:
+            with open(ROULETTE_PATH) as f:
+                roulette_settings = list(csv.reader(f))
+                roulette = Roulette(roulette_settings)
+                emoji_string, score_string = roulette.roll()
+                return emoji_string, score_string

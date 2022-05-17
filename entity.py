@@ -80,8 +80,16 @@ class RouletteScore:
     def calculate_score(self, random_emojis: List[str]) -> int:
         if len(self.emojis) != len(random_emojis):
             raise Exception("The number of roulette items should match")
-        match = all(self.emojis[i] == random_emojis[i] for i in range(len(random_emojis)))
-        return self.score if match else 0
+        count = 0
+        for i in range(len(self.emojis)):
+            if self.emojis[i] == random_emojis[i]:
+                count += 1
+        if count == len(self.emojis):
+            return self.score
+        elif count == len(self.emojis) - 1:
+            return self.score // 2
+        else:
+            return 0
 
 
 class Roulette:

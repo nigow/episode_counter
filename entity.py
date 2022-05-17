@@ -1,5 +1,5 @@
-from random import randint, shuffle
-from typing import List
+from random import randint, shuffle, choice
+from typing import List, Tuple
 
 
 class Episode:
@@ -70,3 +70,39 @@ class EpisodeDeck:
             random_episode_rank = "R"
 
         return Episode(random_episode_content, random_episode_rank)
+
+
+class RouletteScore:
+    def __init__(self, emojis: List[str], score: int):
+        self.emojis = emojis
+        self.score = score
+
+    def calculate_score(self, random_emojis: List[str]) -> int:
+        if len(self.emojis) != len(random_emojis):
+            raise Exception("The number of roulette items should match")
+        match = all(self.emojis[i] == random_emojis[i] for i in range(len(random_emojis)))
+        return self.score if match else 0
+
+
+class Roulette:
+    def __init__(self, settings: List[List[str]]):
+        self.all_emojis = []  # type: List[str]
+        self.scores = []  # type: List[RouletteScore]
+        self.roulette_count = len(settings[0]) - 1  # last item is score (in int)
+        for setting in settings:
+            # store all emojis; the last element of the inner array is the score
+            for emoji in setting[:-1]:
+                if emoji not in self.all_emojis:
+                    self.all_emojis.append(emoji)
+            # store the settings
+            new_score = RouletteScore(emojis=setting[:-1], score=int(setting[-1]))
+            self.scores.append(new_score)
+
+    def roll(self) -> Tuple[str, str]:
+        random_emojis = [choice(self.all_emojis) for _ in range(self.roulette_count)]
+        final_score = 0
+        for score in self.scores:
+            final_score += score.calculate_score(random_emojis)
+        emoji_string = "".join(random_emojis)
+        score_string = f"Score: {final_score}"
+        return emoji_string, score_string
